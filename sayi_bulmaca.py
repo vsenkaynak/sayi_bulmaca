@@ -93,6 +93,7 @@ class App(ctk.CTk):
             self.info_label(msg='CONGRATULATIONS!!!', destroy=False)
             for e in self.entries: self.entries[e].destroy()
             self.entry_to_label(guess_list=guess_list)
+            self.end_game_buttons()
             return
         self.entry_to_label(guess_list=guess_list)
         if self.count > 8:
@@ -102,6 +103,7 @@ class App(ctk.CTk):
             self.info_label(msg=f'Correct number is: '
                                 f'{self.puzzle[0]}{self.puzzle[1]}{self.puzzle[2]}{self.puzzle[3]}',
                             destroy=False)
+            self.end_game_buttons()
             return
         self.y_cord += 0.1
         self.count += 1
@@ -165,7 +167,30 @@ class App(ctk.CTk):
             self.x_cord += 0.1
         self.x_cord = 0.05
 
+    def end_game_buttons(self):
+        self.unbind('<Return>')
+        self.button.configure(text='AGAIN!', command=lambda: self.restart_app(True),
+                              fg_color='#32bbb9', hover_color='#6e37fa',
+                              text_color='black')
+        self.button2 = ctk.CTkButton(
+            master=self, width=25, height=35,
+            border_width=1, text='QUIT!', corner_radius=10,
+            font=('arial bold', 20), fg_color='#b94b32',
+            hover_color='#81361d', text_color='black',
+            command=lambda: self.restart_app(False)
+        )
+        self.button2.place(relx=0.75, rely=self.y_cord - 0.1)
+
+    def restart_app(self, decision: bool):
+        self.restart = decision
+        self.quit()
+
 
 if __name__ == '__main__':
-    app = App()
-    app.mainloop()
+    while True:
+        continue_game = True
+        app = App()
+        app.mainloop()
+        if not app.restart:
+            break
+        app.destroy()
